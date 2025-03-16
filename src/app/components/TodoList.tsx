@@ -13,8 +13,13 @@ const getTodos = async () => {
   return result.data;
 };
 
-const setTodo = async (addTodo: Result) => {
+const addTodo = async (addTodo: Result) => {
   const result = await axios.post("http://localhost:3000/todos", addTodo);
+  return result;
+};
+
+const deleteTodo = async (id: string) => {
+  const result = await axios.delete(`http://localhost:3000/todos/${id}`);
   return result;
 };
 
@@ -27,8 +32,15 @@ const TodoList = () => {
     queryFn: getTodos,
   });
 
-  const mutation = useMutation({
-    mutationFn: setTodo,
+  const addMutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTodo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
@@ -42,8 +54,8 @@ const TodoList = () => {
     return <div>에러가 발생했습니다.</div>;
   }
 
-  const addTodo = async () => {
-    mutation.mutate({
+  const handleAddTodo = async () => {
+    addMutation.mutate({
       id: new Date().getTime().toString(),
       title: title,
       completed: false,
@@ -51,15 +63,20 @@ const TodoList = () => {
     setTitle("");
   };
 
+  const handleDeleteTodo = async (id: string) => {
+    deleteMutation.mutate(id);
+  };
+
   return (
     <div>
       <input type="text" value={title} name="title" onChange={(event) => setTitle(event.target.value)} />
-      <button onClick={addTodo}>일정 추가하기</button>
+      <button onClick={handleAddTodo}>일정 추가하기</button>
       {data?.map((result: Result) => {
         return (
           <div key={result.id}>
             <div>{result.title}</div>
             <button>{result.completed ? "취소하기" : "완료하기"}</button>
+            <button onClick={() => handleDeleteTodo(result.id)}>삭제하기</button>
             <hr></hr>
           </div>
         );
