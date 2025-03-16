@@ -130,7 +130,7 @@ const TodoList = () => {
       {data?.map((result: Todo) => {
         return (
           <div key={result.id}>
-            <button onClick={() => handleCompletedUpdateTodo(result)}>{result.completed ? "❌" : "✅"}</button>
+            <button onClick={() => handleCompletedUpdateTodo(result)}>{result.completed ? "✅" : "🟩"}</button>
             {editId === result.id ? (
               <>
                 <input type="text" value={editTitle} name="editTitle" onChange={(event) => setEditTitle(event.target.value)} />
