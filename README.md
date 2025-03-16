@@ -6,7 +6,8 @@
 
 # 배포 링크
 
-Vercel: https://baro-10-project.vercel.app/
+- Vercel: https://baro-10-project.vercel.app/
+- 자체적으로 `npx json-server db.json` 명령어로 db.json을 3000번 포트로 켜주는 것이 필요합니다.
 
 ---
 
